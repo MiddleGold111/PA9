@@ -3,10 +3,10 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 200, 200 }), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
+    sf::RenderWindow window(sf::VideoMode({ 800, 800 }), "SFML works!");
+    sf::Texture testtext("phone.png");
+    Wall test(testtext, { 0,-2000 }, {200,200});
+    
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -14,7 +14,10 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+        test.update();
+        window.clear();
+        window.draw(test);
+        window.display();
 
-        
     }
 }
