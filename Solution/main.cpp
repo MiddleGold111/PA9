@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "Wall.hpp"
 
 int main()
 {
@@ -14,8 +15,6 @@ int main()
                 window.close();
         }
 
-        window.clear();
-        window.draw(shape);
-        window.display();
+        
     }
 }
