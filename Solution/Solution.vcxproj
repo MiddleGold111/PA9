@@ -147,7 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.hpp" />
+    <ClInclude Include="Lava.hpp" />
     <ClInclude Include="ObjectManager.hpp" />
+    <ClInclude Include="Platforms.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Wall.hpp" />
   </ItemGroup>
