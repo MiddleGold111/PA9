@@ -1,17 +1,19 @@
 #pragma once
 #include "GameObject.hpp"
+#include "Platforms.hpp"
+#include <SFML/Graphics.hpp>
 
 
 class Player : public GameObject
 {
 public:
-	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
+	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size, AllPlatforms& plats) : GameObject(_texture, size) , platf(plats)
 	{
 		this->setPosition(_position);
 		velocity = { 0.0,0.0 };
 		gravity = 0.2f;
 		jumpStrength = -10.0;
-		groundY = 800;
+		groundY = 875;
 		grounded = true;
 
 		maxJumpHeight = 300;
@@ -19,9 +21,39 @@ public:
 		jumping = false;
 
 		jumpKeyHeld = 0;
+
+		//temporary
+		
 	}
 
 	void update() override;
+
+	void checkCollision(AllPlatforms& plats)
+	{
+
+		sf::FloatRect playerBounds = this->getGlobalBounds();
+		
+		for (int i = 0; i < plats.getNum(); i++)
+		{
+			sf::FloatRect platformBounds = plats.getVec()[i].getGlobalBounds();
+			/*if (this->getPosition().y - getSize().y == plats.getVec()[i].getPosition().y)
+			{
+				this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y });
+			}*/
+
+			//playerBounds.findIntersection()
+
+			if (playerBounds.findIntersection(platformBounds))
+			{
+				this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y - 100 });
+			}
+
+			
+
+		}
+	}
+
+
 private:
 	sf::Vector2f velocity;
 	float gravity;
@@ -32,6 +64,10 @@ private:
 	float jumpStart;
 	bool jumping;
 	int jumpKeyHeld;
+
+	//temporary
+	AllPlatforms platf;
+	
 };
 
 void Player::update()
@@ -102,10 +138,18 @@ void Player::update()
 			
 		}
 
-	//}
-	
-
-	
-	
+		checkCollision(platf);
 	
 }
+
+//void Player::checkCollision(AllPlatforms& plats)
+//{
+//	for (int i = 0; i < plats.getNum(); i++)
+//	{
+//		if (this->getPosition().y - getSize().y == plats.getVec()[i].getPosition().y)
+//		{
+//			this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y });
+//		}
+//	}
+//	
+//}
