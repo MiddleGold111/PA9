@@ -10,17 +10,7 @@ public:
 	WallBlock(const sf::Texture& _texture, const sf::Vector2f & _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		this->setPosition(_position);
-		/*float height = _position.y;
-		int num = 1;*/
 		
-		/*while (height > 0)
-		{
-			this->blocks[num] = new Wall(_texture, _position, size);
-			this->blocks[num].setPosition({ _position.x, height + 50 });
-			height += 50;
-		}*/
-		//was also breakingthings
-		//said it didn't like the way i was treating height
 		
 	}
 	void update() override;
@@ -34,14 +24,15 @@ private:
 
 void WallBlock::update()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-	{
-		//this->move({0,1});
-	}
+	//currently a set constant move, should be based on position of player
+		this->move({0,0.1});
+	
 
 	//if player reaches a certain height, move walls down
 	//platforms need to move with the walls as well
 	//track player position so either need to pass in player or?
+
+
 
 
 }
@@ -72,16 +63,19 @@ public:
 
 
 	}
+	
 
 	void update(Player& p, sf::RenderWindow& theWindow);
+
+	//needed to call draw function for each block because not a derived class
 	void draw (sf::RenderWindow& theWindow);
 
 
 
 private:
-	std::vector<WallBlock> wall;
-	std::vector<WallBlock> wall2;
-	int numBlocks;
+	std::vector<WallBlock> wall; //left wall
+	std::vector<WallBlock> wall2; //right wall
+	int numBlocks; //should be based on window position
 	sf::Vector2f winpos;
 	float size;
 	const sf::Texture& textRef;
@@ -91,17 +85,23 @@ private:
 
 void Wall::update(Player& p, sf::RenderWindow& theWindow)
 {
-	if (wall[0].getPosition().y < winpos.y)
+	for (int i = 0; i < numBlocks - 1; i++)
 	{
-		//then we have the block being too far down
-		//need to remove block and add one on the top
-		
+		wall[i].update();
+		wall2[i].update();
+	}
+
+	if (wall[0].getPosition().y > winpos.y)
+	{
+				
 		for (int i = 0; i < numBlocks-1; i++) //loop through number of blocks adjusting vector
 		{
 			wall[i] = wall[i + 1];
 			wall2[i] = wall2[i + 1];
 		}
-		float newY = wall[numBlocks - 2].getPosition().y - size;
+
+		//set new y position for top block
+		float newY = wall[numBlocks - 2].getPosition().y;// -size;
 		wall[numBlocks - 1] = WallBlock(textRef, {0, newY}, {size,size});
 
 
@@ -111,7 +111,7 @@ void Wall::update(Player& p, sf::RenderWindow& theWindow)
 	}
 
 	
-	
+	//draw all the blocks 
 	draw(theWindow);
 
 

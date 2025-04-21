@@ -19,12 +19,7 @@ public:
 
 	void start(void);
 	void run(void);
-	//Wall* getwall(void)
-	//{
-	//	return wall1;
-	//}
-	//Wall wall1[17];
-
+	
 protected:
 	std::vector<GameObject> objects;
 	//Wall wall1[17];
