@@ -41,8 +41,20 @@ public:
 
 		for (int i = 0; i < numPlatforms; i++)
 		{
-			Platform newPlatform(text, { 70,900 }, { 200,50 });
-			platforms.push_back(newPlatform);
+			if (i == 0)
+			{
+				Platform newPlatform(text, { 70,900 }, { 200,50 });
+				platforms.push_back(newPlatform);
+			}
+			else
+			{
+				sf::Vector2f priorpos = platforms[i - 1].getPosition();
+				float newsizeX = 200 + priorpos.x + 100;
+				float newsizeY = 50 + priorpos.y - 100;
+				Platform newPlatform(text, { newsizeX, newsizeY }, { 200,50 });
+				platforms.push_back(newPlatform);
+			}
+			
 		}
 	}
 	int getNum(void)

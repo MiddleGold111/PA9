@@ -4,10 +4,11 @@
 #include <SFML/Graphics.hpp>
 
 
+
 class Player : public GameObject
 {
 public:
-	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size, AllPlatforms& plats) : GameObject(_texture, size) , platf(plats)
+	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size, vector<Platform>& plats) : GameObject(_texture, size), platf(plats)
 	{
 		this->setPosition(_position);
 		velocity = { 0.0,0.0 };
@@ -21,6 +22,7 @@ public:
 		jumping = false;
 
 		jumpKeyHeld = 0;
+		//platf = plats;
 
 		//temporary
 		
@@ -28,29 +30,36 @@ public:
 
 	void update() override;
 
-	void checkCollision(AllPlatforms& plats)
+	bool checkCollision()
 	{
 
-		sf::FloatRect playerBounds = this->getGlobalBounds();
-		
-		for (int i = 0; i < plats.getNum(); i++)
+		//sf::FloatRect playerBounds = this->getGlobalBounds();
+		bool collided = false;
+		for (Platform& platform : platf)
 		{
-			sf::FloatRect platformBounds = plats.getVec()[i].getGlobalBounds();
-			/*if (this->getPosition().y - getSize().y == plats.getVec()[i].getPosition().y)
+			CollisionDirection dir = platform.collide(*this);
+			if (dir == CollisionDirection::Top)
 			{
-				this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y });
-			}*/
-
-			//playerBounds.findIntersection()
-
-			if (playerBounds.findIntersection(platformBounds))
-			{
-				this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y - 100 });
+				grounded = true;
+				collided = true;
+				velocity.y = 0;
+				jumping = false;
 			}
-
-			
+		}
+		if (!collided)
+		{
+			grounded = false;
 
 		}
+		return collided;
+			/*if (platform.collide(*this))
+			{
+				grounded = true;
+				return true;
+			}*/
+		
+		/*grounded = false;
+		return false;*/
 	}
 
 
@@ -60,18 +69,24 @@ private:
 	float jumpStrength;
 	float groundY;
 	bool grounded;
+	//bool grounded2;
 	float maxJumpHeight;
 	float jumpStart;
 	bool jumping;
 	int jumpKeyHeld;
 
 	//temporary
-	AllPlatforms platf;
+	vector<Platform>& platf;
+	//bool moveleft;
+	//bool moveright;
 	
 };
 
 void Player::update()
 {
+
+	//checkCollision();
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		if (this->getPosition().x > 70) //based on walls check for left wall so cant go further
@@ -89,7 +104,7 @@ void Player::update()
 	}
 
 	bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-	if (jumpPressed && jumpKeyHeld<20 && grounded)
+	if (jumpPressed && (jumpKeyHeld<20 || grounded))
 	{
 		velocity.y = jumpStrength;
 		grounded = false;
@@ -117,39 +132,33 @@ void Player::update()
 	}
 	//else if (grounded) //can remove but changes things
 	//{
+
+	/*if (!grounded && !wee)
+	{
+		velocity.y += gravity;
+	}*/
+		
+	
 	if (!grounded)
 	{
 		velocity.y += gravity;
 	}
+	this->move({ 0, velocity.y });
+
+	//checkCollision();
+
+	if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0  which is check for ceiling collision, unneccessary...
+	{
+		this->setPosition({ this->getPosition().x, groundY });
+		velocity.y = 0;
+		grounded = true;
+		jumping = false;
+	}
+	if (this->getPosition().y < 0)
+	{
+		this->setPosition({ this->getPosition().x, 0 });
+		velocity.y = 0;
 		
-		this->move({ 0, velocity.y });
-
-		if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0
-		{
-			this->setPosition({ this->getPosition().x, groundY });
-			velocity.y = 0;
-			grounded = true;
-			jumping = false;
-		}
-		if (this->getPosition().y < 0)
-		{
-			this->setPosition({ this->getPosition().x, 0 });
-			velocity.y = 0;
-			
-		}
-
-		checkCollision(platf);
-	
+	}
 }
 
-//void Player::checkCollision(AllPlatforms& plats)
-//{
-//	for (int i = 0; i < plats.getNum(); i++)
-//	{
-//		if (this->getPosition().y - getSize().y == plats.getVec()[i].getPosition().y)
-//		{
-//			this->setPosition({ this->getPosition().x , plats.getVec()[i].getPosition().y });
-//		}
-//	}
-//	
-//}
