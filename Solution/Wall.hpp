@@ -14,6 +14,7 @@ public:
 		
 	}
 	void update() override;
+	
 
 
 private:
@@ -25,7 +26,8 @@ private:
 void WallBlock::update()
 {
 	//currently a set constant move, should be based on position of player
-		this->move({0,0.1});
+	
+	//this->move({0,0.1});
 	
 
 	//if player reaches a certain height, move walls down
@@ -63,6 +65,21 @@ public:
 
 
 	}
+
+	void compare(sf::View viewf)
+	{
+		if (0 > this->wall[0].getPosition().y)
+		{
+			for (int i = 0; i < numBlocks; i++)
+			{
+				wall[i].move({ 0,-0.1 });
+				wall2[i].move({ 0,-0.1 });
+			}
+			
+		}
+		
+	
+	}
 	
 
 	void update(Player& p, sf::RenderWindow& theWindow);
@@ -90,6 +107,9 @@ void Wall::update(Player& p, sf::RenderWindow& theWindow)
 		wall[i].update();
 		wall2[i].update();
 	}
+	
+
+
 
 	if (wall[0].getPosition().y > winpos.y)
 	{

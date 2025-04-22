@@ -18,8 +18,8 @@ int main()
     Wall firstWall(21, wally, { 1000,1000 }, 70);
     
      
-     Lava l(lavatext, { 70,990 }, { 930,1000 });
-     AllPlatforms plat(1, 25, { 1000,1000 }, platText);
+     Lava l(lavatext, { 0,1000 }, { 1000,1000 });
+     AllPlatforms plat(6, 25, { 1000,1000 }, platText);
      Player p(testtext, { 400,875 }, { 100,100 }, plat.getVec());
 
     //ObjectManager O;
@@ -32,19 +32,26 @@ int main()
                 window.close();
         }
 
-        firstWall.update(p, window); 
+       // firstWall.update(p, window); 
        
+        
+
+        sf::View view = window.getView();
+        firstWall.compare(view);
+        firstWall.update(p, window);
         p.update();
         l.update();
-        window.clear();
-
-        
+        view.setCenter({ 500, p.getPosition().y });
+        //view.move()
+        window.setView(view);
        
-        window.draw(l);
+
+        window.clear();
+        //window.draw(l);
         firstWall.draw(window);
         plat.draw(window);
-     
         window.draw(p);
+        window.draw(l);
        
         window.display();
 

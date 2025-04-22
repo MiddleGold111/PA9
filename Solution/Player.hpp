@@ -85,7 +85,7 @@ private:
 void Player::update()
 {
 
-	//checkCollision();
+	checkCollision();
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
@@ -130,13 +130,7 @@ void Player::update()
 			jumping = false;
 		}
 	}
-	//else if (grounded) //can remove but changes things
-	//{
-
-	/*if (!grounded && !wee)
-	{
-		velocity.y += gravity;
-	}*/
+	
 		
 	
 	if (!grounded)
@@ -154,11 +148,11 @@ void Player::update()
 		grounded = true;
 		jumping = false;
 	}
-	if (this->getPosition().y < 0)
+	/*if (this->getPosition().y < 0)
 	{
 		this->setPosition({ this->getPosition().x, 0 });
 		velocity.y = 0;
 		
-	}
+	}*/
 }
 
