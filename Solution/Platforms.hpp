@@ -13,17 +13,18 @@ public:
 	Platform(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		this->setPosition(_position);
+		instances.push_back(this);
 	}
 
 	void update(void) override;
-
-
-
 
 	
 private:
 
 };
+
+vector<Platform*> Platform::instances = vector<Platform*>();
+
 
 void Platform::update(void)
 {

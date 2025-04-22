@@ -1,5 +1,5 @@
 #pragma once
-#include "Wall.hpp"
+//#include "Wall.hpp"
 #include "Player.hpp"
 #include "GameObject.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Wall.hpp"
+//#include "Wall.hpp"
 #include "Player.hpp"
 #include "ObjectManager.hpp"
 #include "Lava.hpp"
@@ -8,20 +8,15 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
+    window.setFramerateLimit(120);
     //add a background?
 
-    sf::Texture testtext("Play.png");
-    sf::Texture lavatext("Lava3.png");
-    sf::Texture platText("Platform.png");
-    sf::Texture wally("goldblock.png");
-    Wall firstWall(21, wally, { 1000,1000 }, 70);
-    
-     Lava l(lavatext, { 70,990 }, { 930,1000 });
-     AllPlatforms plat(3, 25, { 1000,1000 }, platText);
-     Player p(testtext, { 400,875 }, { 100,100 }, plat.getVec());
-
-    //ObjectManager O;
+    //sf::Texture testtext("Play.png");
+    //sf::Texture lavatext("Lava3.png");
+    //sf::Texture platText("Platform.png");
+    //sf::Texture wally("goldblock.png");
+    ObjectManager O;
     
     while (window.isOpen())
     {
@@ -31,18 +26,11 @@ int main()
                 window.close();
         }
 
-        firstWall.update(p, window); 
-        p.update();
-        l.update();
+        
         window.clear();
-
-        window.draw(l);
-        firstWall.draw(window);
-        plat.draw(window);
-     
-        window.draw(p);
-       
+        O.run(window);
         window.display();
 
     }
+    
 }
