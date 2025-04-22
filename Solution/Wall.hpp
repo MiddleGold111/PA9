@@ -15,10 +15,7 @@ public:
 	}
 	void update() override;
 
-
 private:
-	
-
 
 };
 
@@ -31,18 +28,13 @@ void WallBlock::update()
 	//if player reaches a certain height, move walls down
 	//platforms need to move with the walls as well
 	//track player position so either need to pass in player or?
-
-
-
-
 }
 
-class Wall 
+class Wall : public GameObject
 {
 public:
-	Wall(int newNumBlocks, const sf::Texture& newTexture, const sf::Vector2f& _windowPosition, const float sizeW) : numBlocks(newNumBlocks), textRef(newTexture), winpos(_windowPosition), size(sizeW)
+	Wall(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
-		numBlocks = newNumBlocks;
 		sf::Vector2f pos = winpos = _windowPosition;
 		sf::Texture testtext;
 		if (!testtext.loadFromFile("goldblock.png")) { std::cout << "Failed to load goldblock.png" << std::endl; }

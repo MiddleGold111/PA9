@@ -8,7 +8,9 @@
 class Player : public GameObject
 {
 public:
-	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size, vector<Platform>& plats) : GameObject(_texture, size), platf(plats)
+	static Player* instance; 
+
+	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		this->setPosition(_position);
 		velocity = { 0.0,0.0 };
@@ -20,12 +22,12 @@ public:
 		maxJumpHeight = 300;
 		jumpStart = 0.0;
 		jumping = false;
-
 		jumpKeyHeld = 0;
-		//platf = plats;
-
-		//temporary
 		
+		if(instance == nullptr)
+		{
+			instance = this;
+		}
 	}
 
 	void update() override;
@@ -34,14 +36,13 @@ public:
 	{
 
 		//sf::FloatRect playerBounds = this->getGlobalBounds();
-		bool collided = false;
-		for (Platform& platform : platf)
+		bool collided = true;
+		for (Platform* platform : Platform::instances)
 		{
-			CollisionDirection dir = platform.collide(*this);
+			CollisionDirection dir = (*platform).collide(*this);
 			if (dir == CollisionDirection::Top)
 			{
 				grounded = true;
-				collided = true;
 				velocity.y = 0;
 				jumping = false;
 			}
@@ -49,17 +50,9 @@ public:
 		if (!collided)
 		{
 			grounded = false;
-
+			collided = false;
 		}
 		return collided;
-			/*if (platform.collide(*this))
-			{
-				grounded = true;
-				return true;
-			}*/
-		
-		/*grounded = false;
-		return false;*/
 	}
 
 
@@ -76,7 +69,7 @@ private:
 	int jumpKeyHeld;
 
 	//temporary
-	vector<Platform>& platf;
+
 	//bool moveleft;
 	//bool moveright;
 	
@@ -84,9 +77,6 @@ private:
 
 void Player::update()
 {
-
-	//checkCollision();
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		if (this->getPosition().x > 70) //based on walls check for left wall so cant go further
@@ -145,8 +135,7 @@ void Player::update()
 	}
 	this->move({ 0, velocity.y });
 
-	//checkCollision();
-
+	checkCollision();
 	if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0  which is check for ceiling collision, unneccessary...
 	{
 		this->setPosition({ this->getPosition().x, groundY });
