@@ -17,7 +17,7 @@ public:
 		gravity = 0.2f;
 		jumpStrength = -10.0;
 		groundY = 875;
-		grounded = true;
+		grounded = false;
 
 		maxJumpHeight = 300;
 		jumpStart = 0.0;
@@ -25,7 +25,7 @@ public:
 		jumpKeyHeld = 0;
 		
 		if(instance == nullptr)
-		{
+		{ 
 			instance = this;
 		}
 	}
@@ -36,7 +36,7 @@ public:
 	{
 
 		//sf::FloatRect playerBounds = this->getGlobalBounds();
-		bool collided = true;
+		bool collided = false;
 		for (Platform* platform : Platform::instances)
 		{
 			CollisionDirection dir = (*platform).collide(*this);
@@ -46,11 +46,15 @@ public:
 				velocity.y = 0;
 				jumping = false;
 			}
+			if (dir!=CollisionDirection::None)
+			{
+				collided = true;
+			}
+			
 		}
 		if (!collided)
 		{
 			grounded = false;
-			collided = false;
 		}
 		return collided;
 	}
@@ -74,6 +78,8 @@ private:
 	//bool moveright;
 	
 };
+Player* Player::instance = nullptr;
+
 
 void Player::update()
 {
@@ -81,7 +87,7 @@ void Player::update()
 	{
 		if (this->getPosition().x > 70) //based on walls check for left wall so cant go further
 		{
-			this->move({ -0.9,0 });
+			this->move({ -1.5,0 });
 		}
 		
 	}
@@ -89,12 +95,12 @@ void Player::update()
 	{
 		if (this->getPosition().x < 1000 - 70 - getSize().x) //based on walls based on right wall so can't go further
 		{
-			this->move({ 0.9,0 });
+			this->move({ 1.5,0 });
 		}
 	}
 
 	bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-	if (jumpPressed && (jumpKeyHeld<20 || grounded))
+	if (jumpPressed && (jumpKeyHeld<20/* && grounded*/)) //fix double jump with &&
 	{
 		velocity.y = jumpStrength;
 		grounded = false;
@@ -136,6 +142,7 @@ void Player::update()
 	this->move({ 0, velocity.y });
 
 	checkCollision();
+
 	if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0  which is check for ceiling collision, unneccessary...
 	{
 		this->setPosition({ this->getPosition().x, groundY });
@@ -143,11 +150,11 @@ void Player::update()
 		grounded = true;
 		jumping = false;
 	}
-	if (this->getPosition().y < 0)
+	/*if (this->getPosition().y < 0)
 	{
 		this->setPosition({ this->getPosition().x, 0 });
 		velocity.y = 0;
 		
-	}
+	}*/
 }
 

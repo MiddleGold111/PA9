@@ -1,5 +1,5 @@
 #pragma once
-#include "Wall.hpp"
+//#include "Wall.hpp"
 #include "Player.hpp"
 #include "GameObject.hpp"
 
@@ -13,7 +13,7 @@ public:
 	Lava(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		//this->setTexture(&_texture);
-		speed = -0.03; 
+		speed = -0.03f; 
 		this->setPosition(_position);
 		//this->setSize(size);
 	}
