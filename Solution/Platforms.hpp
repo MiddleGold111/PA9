@@ -8,12 +8,14 @@ class Platform : public GameObject
 {
 public:
 	static vector<Platform*> instances;
+	static float top;
 
 	//WallBlock(const sf::Texture& _texture, const sf::Vector2f & _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	Platform(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		this->setPosition(_position);
 		instances.push_back(this);
+		top = this->getPosition().y;
 	}
 
 	void update(void) override;
@@ -24,11 +26,11 @@ private:
 };
 
 vector<Platform*> Platform::instances = vector<Platform*>();
-
+float Platform::top = 0; 
 
 void Platform::update(void)
 {
-	int i = 0;
+	//int i = 0;
 }
 
 

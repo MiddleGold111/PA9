@@ -26,6 +26,7 @@ public:
 		
 		if(instance == nullptr)
 		{ 
+			instance = this;
 		}
 	}
 
@@ -99,7 +100,7 @@ void Player::update()
 	}
 
 	bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-	if (jumpPressed && (jumpKeyHeld<20 && grounded))
+	if (jumpPressed && (jumpKeyHeld<20/* && grounded*/)) //fix double jump with &&
 	{
 		velocity.y = jumpStrength;
 		grounded = false;
@@ -149,11 +150,11 @@ void Player::update()
 		grounded = true;
 		jumping = false;
 	}
-	if (this->getPosition().y < 0)
+	/*if (this->getPosition().y < 0)
 	{
 		this->setPosition({ this->getPosition().x, 0 });
 		velocity.y = 0;
 		
-	}
+	}*/
 }
 
