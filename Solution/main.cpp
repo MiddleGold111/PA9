@@ -17,9 +17,8 @@ int main()
     sf::Texture wally("goldblock.png");
     Wall firstWall(21, wally, { 1000,1000 }, 70);
     
-     
      Lava l(lavatext, { 70,990 }, { 930,1000 });
-     AllPlatforms plat(1, 25, { 1000,1000 }, platText);
+     AllPlatforms plat(3, 25, { 1000,1000 }, platText);
      Player p(testtext, { 400,875 }, { 100,100 }, plat.getVec());
 
     //ObjectManager O;
@@ -33,13 +32,10 @@ int main()
         }
 
         firstWall.update(p, window); 
-       
         p.update();
         l.update();
         window.clear();
 
-        
-       
         window.draw(l);
         firstWall.draw(window);
         plat.draw(window);

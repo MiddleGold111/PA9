@@ -28,8 +28,10 @@ public:
 CollisionDirection GameObject::collide(GameObject& that)
 {
 	//distance between the objects' centers
-	float distanceX = this->getGeometricCenter().x - that.getGeometricCenter().x;
-	float distanceY = this->getGeometricCenter().y - that.getGeometricCenter().y;
+	//float distanceX = this->getGeometricCenter().x - that.getGeometricCenter().x;
+	//float distanceY = this->getGeometricCenter().y - that.getGeometricCenter().y;
+	float distanceX = this->getGlobalBounds().getCenter().x - that.getGlobalBounds().getCenter().x;
+	float distanceY = this->getGlobalBounds().getCenter().y - that.getGlobalBounds().getCenter().y;
 
 	//actual distance between the objects' edges
 	float gapX = fabs(distanceX) - (that.getSize().x + this->getSize().x) / 2.0;
@@ -41,12 +43,12 @@ CollisionDirection GameObject::collide(GameObject& that)
 		{
 			if (distanceX < 0) //that is on the right
 			{
-				that.move({ gapX, 0.0 });
+				that.move({ -gapX, 0.0 });
 				return CollisionDirection::Left;
 			}
 			else
 			{
-				that.move({ -gapX, 0.0 });
+				that.move({ gapX, 0.0 });
 				return CollisionDirection::Right;
 			}
 		}
