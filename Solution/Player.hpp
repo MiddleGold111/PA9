@@ -32,7 +32,6 @@ public:
 	bool checkCollision()
 	{
 
-		//sf::FloatRect playerBounds = this->getGlobalBounds();
 		bool collided = false;
 		for (Platform* platform : Platform::instances)
 		{
@@ -67,16 +66,13 @@ private:
 	float gravity;
 	float jumpStrength;
 	bool grounded;
-	//bool grounded2;
+	
 	bool jumping;
 	int jumpKeyHeld;
 
 	int jumpsleft;
 
-	//temporary
-
-	//bool moveleft;
-	//bool moveright;
+	
 	
 };
 Player* Player::instance = nullptr;
@@ -126,27 +122,6 @@ void Player::update()
 	checkCollision();
 
 
-	//if (jumping)
-	//{
-	//	if (this->getPosition().y <= jumpStart - maxJumpHeight)
-	//	{
-	//		velocity.y = 0.0;
-	//		jumping = false;
-	//	}
-	//}
-
-	//if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0  which is check for ceiling collision, unneccessary...
-	//{
-	//	this->setPosition({ this->getPosition().x, groundY });
-	//	velocity.y = 0;
-	//	grounded = true;
-	//	jumping = false;
-	//}
-	/*if (this->getPosition().y < 0)
-	{
-		this->setPosition({ this->getPosition().x, 0 });
-		velocity.y = 0;
-		
-	}*/
+	
 }
 

@@ -30,10 +30,14 @@ Lava* Lava::instance = nullptr;
 void Lava::update(void)
 {
 	this->move({ 0, speed });
+	speed -= 0.0001;
 
 	if (Player::instance->getPosition().y < this->getPosition().y - 2500)
 	{
 		this->setPosition({ 0, Player::instance->getPosition().y + 2500 });
 	}
-	
 }
+
+//it takes lava 28 seconds to catch up
+//wayyy too long
+//added a speed

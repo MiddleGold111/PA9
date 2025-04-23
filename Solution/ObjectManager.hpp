@@ -7,6 +7,7 @@
 #include "Lava.hpp"
 #include <cstdlib>
 #include <string>
+#include "Fireballs.hpp"
 
 using std::rand;
 
@@ -37,6 +38,7 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	if (!platformTexture.loadFromFile("Platform.png")) std::cout << "Failed to load Platform.png\n";
 	if (!lavaTexture.loadFromFile("Lava3.png")) std::cout << "Failed to load Lava3.png\n";
 	if (!goldblockTexture.loadFromFile("goldblock.png")) std::cout << "Failed to load goldblock.png\n";
+	//if (!goldblockTexture.loadFromFile("wall.png")) std::cout << "Failed to load goldblock.png\n";
 
 	objects.push_back(new Player(playerTexture, { 400, 300 }, { 100,100 }));
 	objects.push_back(new Platform(platformTexture, { 0, 500 }, { 1000, 1000 }));
@@ -79,7 +81,11 @@ void ObjectManager::run(sf::RenderWindow& window)
 
 
 			current->update();
-			window.draw(*current);
+			if (i >= 3)
+			{
+				window.draw(*current);
+			}
+			
 
 			if (current != Player::instance && current->getPosition().y > Lava::instance->getPosition().y)
 			{
@@ -91,6 +97,10 @@ void ObjectManager::run(sf::RenderWindow& window)
 				i++;
 			}
 		}
+		for (int i = 0; i < 3; i++)
+		{
+			window.draw(*objects[i]);
+		}
 		//create new objects based on top platform
 		//delete objects below lava
 
@@ -101,9 +111,29 @@ void ObjectManager::run(sf::RenderWindow& window)
 			objects.push_back(new Platform(goldblockTexture, { 930, Platform::top }, { 70, 70 }));
 			if ((int)Platform::top % 12 == 0)
 			{
-				objects.push_back(new Platform(platformTexture, { (float)(rand() % 930 + 20), Platform::top }, { (float)(rand() % 50 + 200), 50 }));
+				//objects.push_back(new Platform(platformTexture, { (float)(rand() % 930 + 20), Platform::top }, { (float)(rand() % 50 + 200), 50 })); 
+				
+				////float width = (float)(rand() % 50 + 200);
+				////float x = (float)(rand() % (int)(1000 - 70 * 2 - width) + 70); // between 70 and 930 - width
+
+				////objects.push_back(new Platform(platformTexture, { x, Platform::top }, { width, 50 }));
+
+
+
+				float width = static_cast<float>(rand() % 50 + 200); // 200 to 249 wide
+				float minX = 100.0f;  // leave ~100px from left wall
+				float maxX = 1000.0f - 100.0f - width; // leave ~100px from right wall based on width
+
+				float x = static_cast<float>(rand() % static_cast<int>(maxX - minX)) + minX;
+
+				objects.push_back(new Platform(platformTexture, { x, Platform::top }, { width, 50 }));
+
+				objects.push_back(new FireBalls(lavaTexture, { (float)(rand()%500 +200), view.getCenter().y - 510}, {40,40}));
 			}
 		}
+
+		
+
 		if (Player::instance->getPosition().y > Lava::instance->getPosition().y)
 		{
 			endScreen = true;

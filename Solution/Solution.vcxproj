@@ -146,6 +146,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Fireballs.hpp" />
     <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="Lava.hpp" />
     <ClInclude Include="ObjectManager.hpp" />
