@@ -10,14 +10,37 @@
 
 using std::rand;
 
-class ObjectManager 
+enum class status {Menu, Run, DeathMenu, End, PlayAgain };
+//enum class status { Run, End};
+
+class ObjectManager
 {
 public:
 	ObjectManager();
-	
 
-	//~ObjectManager(void);
-	void run(sf::RenderWindow& window);
+
+	~ObjectManager(void)
+	{
+		for (size_t i = 0; i < objects.size();i++)
+		{
+			delete(objects[i]);
+		}
+	}
+
+	void reset(void)
+	{
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			delete(objects[i]);
+		}
+		Platform::instances.clear();
+		if (Player::instance) {
+			delete Player::instance;
+		}
+		
+	}
+
+	status run(sf::RenderWindow& window);
 	
 protected:
 	std::vector<GameObject*> objects;
@@ -53,8 +76,10 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	scoreboard.setOutlineThickness(3.0f);
 }
 
-void ObjectManager::run(sf::RenderWindow& window)
+status ObjectManager::run(sf::RenderWindow& window)
 {
+
+
 	if (!endScreen)
 	{
 
@@ -81,6 +106,7 @@ void ObjectManager::run(sf::RenderWindow& window)
 				//delete objects below lava
 				delete(current);
 				objects.erase(objects.begin() + i);
+
 			}
 			else
 			{
@@ -166,23 +192,32 @@ void ObjectManager::run(sf::RenderWindow& window)
 			scoreboard.setOutlineColor(sf::Color::Yellow);
 			scoreboard.setFillColor(sf::Color::Green);
 		}
+		return status::Run;
 	}
 	else
 	{
-		
-		sf::Text text(font);
-		text.setCharacterSize(50);
-		text.setStyle(sf::Text::Regular);
-		text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487));
-		text.setPosition({ 450, Player::instance->getPosition().y });
-		window.draw(text);
+		return status:: DeathMenu;
+		//
+		//sf::Text text(font);
+		//text.setCharacterSize(50);
+		//text.setStyle(sf::Text::Regular);
+		//text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487) + "\nPress escape to leave\nEnter to play again");
+		//text.setPosition({ 450, Player::instance->getPosition().y });
+		//window.draw(text);
 
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-		{
-			window.close();
-		}
-		//figure out replay
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+		//{
+		//	//window.close();
+		//	return status::End;
+		//}
+
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+		//{
+		//	
+		//	return status::PlayAgain;
+		//}
+		////figure out replay
 
 	}
 
