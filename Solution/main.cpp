@@ -12,6 +12,9 @@ int main()
     window.setFramerateLimit(120);*/
     //add a background?
 
+    int highscore = 0;
+
+
     std::srand(std::time(nullptr));
     status meep = status::Run;
 
@@ -22,13 +25,14 @@ int main()
     text.setCharacterSize(50);
     text.setStyle(sf::Text::Regular);
 
-  //  sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
-
+    sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
+    window.setFramerateLimit(120);
+    ObjectManager* O = new ObjectManager;
     while (meep != status::End)
     {
-        sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
-        window.setFramerateLimit(120);
-        ObjectManager O;
+        //sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
+       // window.setFramerateLimit(120);
+       // ObjectManager* O = new ObjectManager;
 
         while (window.isOpen())
         {
@@ -40,11 +44,11 @@ int main()
                     window.close();
                     exit(1);
                 }
-            }           
+            }
 
             window.clear();
 
-            if (menu) 
+            if (menu)
             { // display the menu
 
                 //either open screen or player death
@@ -61,12 +65,20 @@ int main()
 
                     }
                 }
-                
+
                 if (meep == status::DeathMenu)
                 {
-                    
-                    text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487) + "\nPress escape to leave\nEnter to play again");
-                    text.setPosition({ 450, 10 });/*Player::instance->getPosition().y */
+
+                    int score = -(int)Player::instance->getPosition().y + 487;
+                    if (score > highscore)
+                    {
+                        highscore = score;
+                    }
+                    window.clear();
+                    text.setString("SKILL ISSUE\nScore: " + std::to_string(score) + "\nHigh Score: " + std::to_string(highscore) + "\nPress escape to leave\nEnter to play again");
+
+                   
+                    text.setPosition({ 350, window.getView().getCenter().y -200 });/*Player::instance->getPosition().y */
                 
                     window.draw(text);
 
@@ -79,12 +91,17 @@ int main()
                     }
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
                     {
+                        
+                        delete O;
+
+                        O = new ObjectManager();
+
                         meep = status::Run;
-                        O.reset();
-                        window.close();
+                   
                         menu = true;
                         
                     }
+
 
 
 
@@ -94,19 +111,21 @@ int main()
             }
             else { // play the game
 
-                meep = O.run(window);                
+                meep = O->run(window);                
 
                if (meep == status::PlayAgain || meep == status::End)
                 {
-                    window.close();
+                   /*delete O;
+                    window.close();*/
+                   menu = true;
                 }
             }    
 
             window.display();
         }
     }
-    
-   
+    delete O;
+    return 0;
    
     
    //window.close();

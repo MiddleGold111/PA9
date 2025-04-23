@@ -25,18 +25,22 @@ public:
 		{
 			delete(objects[i]);
 		}
+		Platform::instances.clear();
+		Platform::top = 0;
+		Player::instance = nullptr;
+		Lava::instance = nullptr;
 	}
 
 	void reset(void)
 	{
-		for (size_t i = 0; i < objects.size(); i++)
-		{
-			delete(objects[i]);
-		}
+		
+		
 		Platform::instances.clear();
-		if (Player::instance) {
+		Player::instance = nullptr;
+		/*if (Player::instance) {
 			delete Player::instance;
-		}
+		}*/
+		
 		
 	}
 

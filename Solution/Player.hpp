@@ -21,10 +21,11 @@ public:
 		jumpKeyHeld = 0;
 		jumpsleft = 2;
 		
-		if(instance == nullptr)
+		/*if(instance == nullptr)
 		{ 
 			instance = this;
-		}
+		}*/
+		Player::instance = this;
 	}
 
 	void update() override;
