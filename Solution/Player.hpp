@@ -46,6 +46,10 @@ public:
 				velocity.y = 0;
 				jumping = false;
 			}
+			if (dir == CollisionDirection::Bottom && velocity.y < 0)
+			{
+				velocity.y = 0;
+			}
 			if (dir!=CollisionDirection::None)
 			{
 				collided = true;
@@ -87,7 +91,7 @@ void Player::update()
 	{
 		if (this->getPosition().x > 70) //based on walls check for left wall so cant go further
 		{
-			this->move({ -1.5,0 });
+			this->move({ -3,0 });
 		}
 		
 	}
@@ -95,7 +99,7 @@ void Player::update()
 	{
 		if (this->getPosition().x < 1000 - 70 - getSize().x) //based on walls based on right wall so can't go further
 		{
-			this->move({ 1.5,0 });
+			this->move({ 3,0 });
 		}
 	}
 

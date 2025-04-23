@@ -10,25 +10,27 @@
 class Lava : public GameObject
 {
 public:
+	static Lava* instance;
 	Lava(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
 	{
 		//this->setTexture(&_texture);
-		speed = -0.03f; 
+		speed = -0.5f; 
 		this->setPosition(_position);
 		//this->setSize(size);
+		if (instance == nullptr) instance = this;
 	}
 	void update(void) override;
 	void setSpeed(float _speed) { speed = _speed; }
 private:
 	float speed;
-	
 
 };
+Lava* Lava::instance = nullptr;
 
 void Lava::update(void)
 {
-	if (this->getPosition().y > 0)
-	{
+	//if (this->getPosition().y > 0)
+	//{
 		this->move({ 0, speed });
-	}
+	//}
 }
