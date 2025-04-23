@@ -20,7 +20,7 @@ public:
 		jumping = false;
 		jumpKeyHeld = 0;
 		jumpsleft = 2;
-		
+		jumpBuffered = false;
 		if(instance == nullptr)
 		{ 
 			instance = this;
@@ -40,7 +40,7 @@ public:
 			if (dir == CollisionDirection::Top)
 			{
 				grounded = true;
-				velocity.y = 0;
+				if(velocity.y > 0) velocity.y = 0;
 				jumping = false;
 				jumpsleft = 2;
 			}
@@ -70,7 +70,7 @@ private:
 	//bool grounded2;
 	bool jumping;
 	int jumpKeyHeld;
-
+	bool jumpBuffered;
 	int jumpsleft;
 
 	//temporary
@@ -101,29 +101,46 @@ void Player::update()
 	}
 
 	bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-	if (jumpPressed && jumpKeyHeld<20 && jumpsleft>0) //fix double jump with &&
+	if (jumpPressed && !jumpBuffered && jumpsleft > 0)
 	{
 		velocity.y = jumpStrength;
 		grounded = false;
 		jumping = true;
-		if(jumpKeyHeld == 0) jumpsleft--;
+		jumpsleft--;
 	}
 
-	if (jumpPressed)
-	{
-		jumpKeyHeld++;
-	}
-	else
-	{
-		jumpKeyHeld = 0;
-	}
+	jumpBuffered = jumpPressed; // set to true if the key is still held
+
+	//bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
+	//if (jumpPressed && jumpKeyHeld<20 && jumpsleft>0) //fix double jump with &&
+	//{
+	//	velocity.y = jumpStrength;
+	//	grounded = false;
+	//	jumping = true;
+	//	if(jumpKeyHeld == 0) jumpsleft--;
+	//}
+
+	//if (jumpPressed)
+	//{
+	//	jumpKeyHeld++;
+	//}
+	//else
+	//{
+	//	jumpKeyHeld = 0;
+	//}
+
 	if (!grounded)
 	{
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+		if (velocity.y < 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+		{
+			velocity.y += gravity * 0.7f;  // lighter gravity on way up
+		}
+		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
 			velocity.y += (3 * gravity);
 		}
 		else velocity.y += gravity;
+		
 	}
 	this->move({ 0, velocity.y });
 
