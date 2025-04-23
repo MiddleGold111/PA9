@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Lava.hpp"
 #include <cstdlib>
+#include <string>
 
 using std::rand;
 
@@ -24,9 +25,12 @@ protected:
 	sf::Texture platformTexture;
 	sf::Texture lavaTexture;
 	sf::Texture goldblockTexture;
+	const sf::Font font;
+	sf::Text scoreboard;
+	bool endScreen;
 };
 
-ObjectManager::ObjectManager()
+ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 {
 
 	if (!playerTexture.loadFromFile("Play.png")) std::cout << "Failed to load Play.png\n";
@@ -50,49 +54,80 @@ ObjectManager::ObjectManager()
 		objects.push_back(new Platform(goldblockTexture, { 0,(float)i }, { 70, 70 }));
 		objects.push_back(new Platform(goldblockTexture, { 930,(float)i }, { 70, 70 }));
 	}
-
+	endScreen = false;
+	scoreboard.setStyle(sf::Text::Regular);
 }
 
 void ObjectManager::run(sf::RenderWindow& window)
 {
-	sf::View view = window.getView();
-	view.setCenter({ 500, Player::instance->getPosition().y });
-	window.setView(view);
-
-	//for (GameObject* current : objects)
-	for(size_t i = 0; i< objects.size();)
+	if (!endScreen)
 	{
-		GameObject* current = objects[i];
-		
-		
-		current->update();
-		window.draw(*current);
 
-		if (current != Player::instance && current->getPosition().y > Lava::instance->getPosition().y)
+		sf::View view = window.getView();
+		view.setCenter({ 500, Player::instance->getPosition().y });
+		window.setView(view);
+
+		//update scoreboard position
+		scoreboard.setPosition({ 100, view.getCenter().y - (window.getSize().y / 2) + 10 });
+		scoreboard.setString(std::to_string(-(int)Player::instance->getPosition().y +400));
+		window.draw(scoreboard);
+
+		//for (GameObject* current : objects)
+		for (size_t i = 0; i < objects.size();)
 		{
-			
-			delete(current);
-			objects.erase(objects.begin() + i);
-			
+			GameObject* current = objects[i];
+
+
+			current->update();
+			window.draw(*current);
+
+			if (current != Player::instance && current->getPosition().y > Lava::instance->getPosition().y)
+			{
+				delete(current);
+				objects.erase(objects.begin() + i);
+			}
+			else
+			{
+				i++;
+			}
 		}
-		else
+		//create new objects based on top platform
+		//delete objects below lava
+
+		//generate new platforms (and walls)
+		if (Platform::top > Player::instance->getPosition().y - 700)
 		{
-			i++;
+			objects.push_back(new Platform(goldblockTexture, { 0, Platform::top - 70 }, { 70, 70 }));
+			objects.push_back(new Platform(goldblockTexture, { 930, Platform::top }, { 70, 70 }));
+			if ((int)Platform::top % 12 == 0)
+			{
+				objects.push_back(new Platform(platformTexture, { (float)(rand() % 930 + 20), Platform::top }, { (float)(rand() % 50 + 200), 50 }));
+			}
+		}
+		if (Player::instance->getPosition().y > Lava::instance->getPosition().y)
+		{
+			endScreen = true;
 		}
 	}
-	//create new objects based on top platform
-	//delete objects below lava
-
-	//generate new platforms (and walls)
-	if (Platform::top > Player::instance->getPosition().y - 700)
+	else
 	{
-		objects.push_back(new Platform(goldblockTexture, { 0, Platform::top-70}, { 70, 70 }));
-		objects.push_back(new Platform(goldblockTexture, { 930, Platform::top}, { 70, 70 }));
-		if ((int)Platform::top % 12 == 0)
+		
+		sf::Text text(font);
+		text.setCharacterSize(50);
+		text.setStyle(sf::Text::Regular);
+		text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487));
+		text.setPosition({ 450, Player::instance->getPosition().y });
+		window.draw(text);
+
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 		{
-			objects.push_back(new Platform(platformTexture, { (float)(rand() % 930 + 20), Platform::top }, { (float)(rand()%50 + 200 ), 50}));
+			window.close();
 		}
+
+
 	}
+
 }
 
 

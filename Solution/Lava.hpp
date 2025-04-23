@@ -29,8 +29,11 @@ Lava* Lava::instance = nullptr;
 
 void Lava::update(void)
 {
-	//if (this->getPosition().y > 0)
-	//{
-		this->move({ 0, speed });
-	//}
+	this->move({ 0, speed });
+
+	if (Player::instance->getPosition().y < this->getPosition().y - 2500)
+	{
+		this->setPosition({ 0, Player::instance->getPosition().y + 2500 });
+	}
+	
 }
