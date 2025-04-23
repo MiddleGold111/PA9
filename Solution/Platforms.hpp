@@ -18,6 +18,12 @@ public:
 		top = this->getPosition().y;
 	}
 
+	~Platform(void)
+	{
+		Platform& temp = *this;
+		instances.erase(std::find(instances.begin(), instances.end(), this));
+	}
+
 	void update(void) override;
 
 	

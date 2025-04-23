@@ -8,7 +8,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 1000, 2000 }), "THE GAME");
+    sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
     window.setFramerateLimit(120);
     //add a background?
 
@@ -16,6 +16,8 @@ int main()
     //sf::Texture lavatext("Lava3.png");
     //sf::Texture platText("Platform.png");
     //sf::Texture wally("goldblock.png");
+
+    std::srand(std::time(nullptr));
     ObjectManager O;
     
     while (window.isOpen())
