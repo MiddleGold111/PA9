@@ -88,7 +88,7 @@ void Player::update()
 	{
 		if (this->getPosition().x > 70) //based on walls check for left wall so cant go further
 		{
-			this->move({ -3,0 });
+			this->move({ -3.5,0 });
 		}
 		
 	}
@@ -96,7 +96,7 @@ void Player::update()
 	{
 		if (this->getPosition().x < 1000 - 70 - getSize().x) //based on walls based on right wall so can't go further
 		{
-			this->move({ 3,0 });
+			this->move({ 3.5,0 });
 		}
 	}
 
@@ -119,7 +119,11 @@ void Player::update()
 	}
 	if (!grounded)
 	{
-		velocity.y += gravity;
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+		{
+			velocity.y += (3 * gravity);
+		}
+		else velocity.y += gravity;
 	}
 	this->move({ 0, velocity.y });
 

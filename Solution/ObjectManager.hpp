@@ -42,13 +42,7 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	objects.push_back(new Platform(platformTexture, { 0, 500 }, { 1000, 1000 }));
 	objects.push_back(new Lava(lavaTexture, { 0,1000 }, { 1000, 1000 }));
 
-
-	/*objects.push_back(new Player(sf::Texture("Play.png"), { 400, 300 }, { 100,100 }));
-	objects.push_back(new Platform(sf::Texture("Platform.png"), { 0, 500 }, { 1000, 1000 }));
-	objects.push_back(new Lava(sf::Texture("Lava3.png"), { 0,1000 }, { 1000, 1000 }));*/
-
-
-	//add starting objects(
+	//add starting objects
 	for (int i = 0; i < 1070; i += 70)
 	{
 		objects.push_back(new Platform(goldblockTexture, { 0,(float)i }, { 70, 70 }));
@@ -56,6 +50,7 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	}
 	endScreen = false;
 	scoreboard.setStyle(sf::Text::Regular);
+	scoreboard.setOutlineThickness(3.0f);
 }
 
 void ObjectManager::run(sf::RenderWindow& window)
@@ -83,6 +78,7 @@ void ObjectManager::run(sf::RenderWindow& window)
 
 			if (current != Player::instance && current->getPosition().y > Lava::instance->getPosition().y)
 			{
+				//delete objects below lava
 				delete(current);
 				objects.erase(objects.begin() + i);
 			}
@@ -91,22 +87,84 @@ void ObjectManager::run(sf::RenderWindow& window)
 				i++;
 			}
 		}
-		//create new objects based on top platform
-		//delete objects below lava
 
+		//create new objects based on top platform
 		//generate new platforms (and walls)
 		if (Platform::top > Player::instance->getPosition().y - 700)
 		{
+			//walls
 			objects.push_back(new Platform(goldblockTexture, { 0, Platform::top - 70 }, { 70, 70 }));
 			objects.push_back(new Platform(goldblockTexture, { 930, Platform::top }, { 70, 70 }));
+
+			//platforms
 			if ((int)Platform::top % 12 == 0)
 			{
-				objects.push_back(new Platform(platformTexture, { (float)(rand() % 930 + 20), Platform::top }, { (float)(rand() % 50 + 200), 50 }));
+				float platWidth;
+				float platPos;
+				int numPlats = rand() % 2 + 1;
+				switch (numPlats)
+				{
+				case 1:
+				{
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (860 - (int)platWidth) + 70);
+					objects.push_back(new Platform(platformTexture, { platPos , Platform::top }, { platWidth, 50 }));
+					break;
+				}
+				case 2:
+				{
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (430 - (int)platWidth) + 70);
+					objects.push_back(new Platform(platformTexture, { platPos , Platform::top }, { platWidth, 50 }));
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (430 - (int)platWidth) + 500); 
+					objects.push_back(new Platform(platformTexture, {platPos , Platform::top}, {platWidth, 50}));
+					break;
+				}
+				/*case 3:
+				{
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (287 - (int)platWidth) + 70);
+					objects.push_back(new Platform(platformTexture, { platPos , Platform::top }, { platWidth, 50 }));
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (287 - (int)platWidth) + 357);
+					objects.push_back(new Platform(platformTexture, {platPos , Platform::top}, {platWidth, 50}));
+					platWidth = (float)(rand() % 100 + 150);
+					platPos = (float)(rand() % (287 - (int)platWidth) + 644);
+					objects.push_back(new Platform(platformTexture, {platPos , Platform::top}, {platWidth, 50}));
+					break;
+				}*/
+				}
 			}
 		}
 		if (Player::instance->getPosition().y > Lava::instance->getPosition().y)
 		{
 			endScreen = true;
+		}
+		if (Player::instance->getPosition().y < -50000 && Lava::instance->getSpeed()>-4.0f)
+		{
+			Lava::instance->setSpeed(-3.5f);
+			scoreboard.setOutlineColor(sf::Color::Red);
+			scoreboard.setFillColor(sf::Color::Black);
+		}
+		else if (Player::instance->getPosition().y < -30000 && Lava::instance->getSpeed()>-3.5f)
+		{
+			Lava::instance->setSpeed(-3.5f);
+			scoreboard.setOutlineColor(sf::Color::Cyan);
+			scoreboard.setFillColor(sf::Color::White);
+		}
+		else if (Player::instance->getPosition().y < -15000 && Lava::instance->getSpeed()>-3.0f)
+		{
+			Lava::instance->setSpeed(-3.0f);
+			scoreboard.setOutlineColor(sf::Color::Magenta);
+			scoreboard.setFillColor(sf::Color::Blue);
+		}
+		else if (Player::instance->getPosition().y < -5000 && Lava::instance->getSpeed()>-2.5f)
+		{
+			Lava::instance->setSpeed(-2.5f);
+
+			scoreboard.setOutlineColor(sf::Color::Yellow);
+			scoreboard.setFillColor(sf::Color::Green);
 		}
 	}
 	else
@@ -124,7 +182,7 @@ void ObjectManager::run(sf::RenderWindow& window)
 		{
 			window.close();
 		}
-
+		//figure out replay
 
 	}
 

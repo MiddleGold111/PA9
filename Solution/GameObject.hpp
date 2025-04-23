@@ -52,6 +52,7 @@ CollisionDirection GameObject::collide(GameObject& that)
 				return CollisionDirection::Right;
 			}
 		}
+		
 		else //separate vertically
 		{
 			if (distanceY > 0) //that is below
