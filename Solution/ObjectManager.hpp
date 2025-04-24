@@ -57,10 +57,12 @@ protected:
 	sf::Text scoreboard;
 	bool endScreen;
 
+
 	sf::SoundBuffer buffer;
 	sf::Sound sound;
 	
-	
+	int nextPlatform;
+
 };
 
 
@@ -77,22 +79,29 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 	objects.push_back(new Platform(platformTexture, { 0, 500 }, { 1000, 1000 }));
 	objects.push_back(new Lava(lavaTexture, { 0,1000 }, { 1000, 1000 }));
 
+	nextPlatform = rand() % 4 + 9;
 	//add starting objects
 	for (int i = 0; i < 1070; i += 70)
 	{
 		objects.push_back(new Platform(goldblockTexture, { 0,(float)i }, { 70, 70 }));
 		objects.push_back(new Platform(goldblockTexture, { 930,(float)i }, { 70, 70 }));
+		/*if(nextPlatform == 0)
+		{
+			objects.push_back(new Platform(platformTexture, { 70, (float)i }, {50, 150}));
+			nextPlatform = rand() % 4 + 9;
+		}
+		nextPlatform--;*/
 	}
 	endScreen = false;
 	scoreboard.setStyle(sf::Text::Regular);
 	scoreboard.setOutlineThickness(3.0f);
 
 
+
 	
 	buffer.loadFromFile("ded.mp3");
 	sound.setBuffer(buffer);
 	
-
 	
 }
 
@@ -143,7 +152,7 @@ status ObjectManager::run(sf::RenderWindow& window)
 			objects.push_back(new Platform(goldblockTexture, { 930, Platform::top }, { 70, 70 }));
 
 			//platforms
-			if ((int)Platform::top % 12 == 0)
+			if (nextPlatform == 0)
 			{
 				float platWidth;
 				float platPos;
@@ -181,12 +190,16 @@ status ObjectManager::run(sf::RenderWindow& window)
 					break;
 				}*/
 				}
+				nextPlatform = rand() % 3 + 4;
+
 			}
+			nextPlatform--;
 		}
 		if (Player::instance->getPosition().y > Lava::instance->getPosition().y)
 		{
 			endScreen = true;
 		}
+		//update score color and lavaspeed
 		if (Player::instance->getPosition().y < -50000 && Lava::instance->getSpeed()>-4.0f)
 		{
 			Lava::instance->setSpeed(-3.5f);
