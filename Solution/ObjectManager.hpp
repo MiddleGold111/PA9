@@ -99,7 +99,7 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 
 
 	
-	buffer.loadFromFile("ded.mp3");
+	buffer.loadFromFile("clang.mp3");
 	sound.setBuffer(buffer);
 	
 	
@@ -200,19 +200,19 @@ status ObjectManager::run(sf::RenderWindow& window)
 			endScreen = true;
 		}
 		//update score color and lavaspeed
-		if (Player::instance->getPosition().y < -50000 && Lava::instance->getSpeed()>-4.0f)
+		if (Player::instance->getPosition().y < -40000 && Lava::instance->getSpeed()>-4.0f)
 		{
 			Lava::instance->setSpeed(-3.5f);
 			scoreboard.setOutlineColor(sf::Color::Red);
 			scoreboard.setFillColor(sf::Color::Black);
 		}
-		else if (Player::instance->getPosition().y < -30000 && Lava::instance->getSpeed()>-3.5f)
+		else if (Player::instance->getPosition().y < -25000 && Lava::instance->getSpeed()>-3.5f)
 		{
 			Lava::instance->setSpeed(-3.5f);
 			scoreboard.setOutlineColor(sf::Color::Cyan);
 			scoreboard.setFillColor(sf::Color::White);
 		}
-		else if (Player::instance->getPosition().y < -15000 && Lava::instance->getSpeed()>-3.0f)
+		else if (Player::instance->getPosition().y < -12500 && Lava::instance->getSpeed()>-3.0f)
 		{
 			Lava::instance->setSpeed(-3.0f);
 			scoreboard.setOutlineColor(sf::Color::Magenta);
