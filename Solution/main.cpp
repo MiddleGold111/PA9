@@ -5,11 +5,11 @@
 #include "ObjectManager.hpp"
 #include "Lava.hpp"
 #include "Platforms.hpp"
+#include <SFML/Audio.hpp>
 
 int main()
 {
-    /*sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
-    window.setFramerateLimit(120);*/
+    
     //add a background?
 
     int highscore = 0;
@@ -25,7 +25,22 @@ int main()
     text.setCharacterSize(50);
     text.setStyle(sf::Text::Regular);
 
+   /* sf::Texture t;
+    t.loadFromFile("goldblock.png");
+    sf::Sprite s(t);*/
+
+    
+    //sound.play();
+
+   
+
+
+
+
+
+
     sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
+    
     window.setFramerateLimit(120);
     ObjectManager* O = new ObjectManager;
     while (meep != status::End)
@@ -110,6 +125,8 @@ int main()
                 
             }
             else { // play the game
+
+                //window.draw(s); //bs background
 
                 meep = O->run(window);                
 

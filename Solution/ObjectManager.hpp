@@ -16,6 +16,7 @@ enum class status {Menu, Run, DeathMenu, End, PlayAgain };
 class ObjectManager
 {
 public:
+	
 	ObjectManager();
 
 
@@ -55,9 +56,16 @@ protected:
 	const sf::Font font;
 	sf::Text scoreboard;
 	bool endScreen;
+
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+	
+	
 };
 
-ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
+
+
+ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(buffer)
 {
 
 	if (!playerTexture.loadFromFile("Play.png")) std::cout << "Failed to load Play.png\n";
@@ -78,6 +86,14 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	endScreen = false;
 	scoreboard.setStyle(sf::Text::Regular);
 	scoreboard.setOutlineThickness(3.0f);
+
+
+	
+	buffer.loadFromFile("ded.mp3");
+	sound.setBuffer(buffer);
+	
+
+	
 }
 
 status ObjectManager::run(sf::RenderWindow& window)
@@ -200,6 +216,10 @@ status ObjectManager::run(sf::RenderWindow& window)
 	}
 	else
 	{
+		sound.play();
+
+
+
 		return status:: DeathMenu;
 		//
 		//sf::Text text(font);
