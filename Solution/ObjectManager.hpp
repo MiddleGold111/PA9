@@ -10,14 +10,42 @@
 
 using std::rand;
 
-class ObjectManager 
+enum class status {Menu, Run, DeathMenu, End, PlayAgain };
+//enum class status { Run, End};
+
+class ObjectManager
 {
 public:
-	ObjectManager();
 	
+	ObjectManager();
 
-	//~ObjectManager(void);
-	void run(sf::RenderWindow& window);
+
+	~ObjectManager(void)
+	{
+		for (size_t i = 0; i < objects.size();i++)
+		{
+			delete(objects[i]);
+		}
+		Platform::instances.clear();
+		Platform::top = 0;
+		Player::instance = nullptr;
+		Lava::instance = nullptr;
+	}
+
+	void reset(void)
+	{
+		
+		
+		Platform::instances.clear();
+		Player::instance = nullptr;
+		/*if (Player::instance) {
+			delete Player::instance;
+		}*/
+		
+		
+	}
+
+	status run(sf::RenderWindow& window);
 	
 protected:
 	std::vector<GameObject*> objects;
@@ -28,10 +56,18 @@ protected:
 	const sf::Font font;
 	sf::Text scoreboard;
 	bool endScreen;
+
+
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+	
 	int nextPlatform;
+
 };
 
-ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
+
+
+ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(buffer)
 {
 
 	if (!playerTexture.loadFromFile("Play.png")) std::cout << "Failed to load Play.png\n";
@@ -59,11 +95,20 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font)
 	endScreen = false;
 	scoreboard.setStyle(sf::Text::Regular);
 	scoreboard.setOutlineThickness(3.0f);
+
+
+
+	
+	buffer.loadFromFile("ded.mp3");
+	sound.setBuffer(buffer);
+	
 	
 }
 
-void ObjectManager::run(sf::RenderWindow& window)
+status ObjectManager::run(sf::RenderWindow& window)
 {
+
+
 	if (!endScreen)
 	{
 
@@ -90,6 +135,7 @@ void ObjectManager::run(sf::RenderWindow& window)
 				//delete objects below lava
 				delete(current);
 				objects.erase(objects.begin() + i);
+
 			}
 			else
 			{
@@ -179,23 +225,36 @@ void ObjectManager::run(sf::RenderWindow& window)
 			scoreboard.setOutlineColor(sf::Color::Yellow);
 			scoreboard.setFillColor(sf::Color::Green);
 		}
+		return status::Run;
 	}
 	else
 	{
-		
-		sf::Text text(font);
-		text.setCharacterSize(50);
-		text.setStyle(sf::Text::Regular);
-		text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487));
-		text.setPosition({ 450, Player::instance->getPosition().y });
-		window.draw(text);
+		sound.play();
 
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-		{
-			window.close();
-		}
-		//figure out replay
+
+		return status:: DeathMenu;
+		//
+		//sf::Text text(font);
+		//text.setCharacterSize(50);
+		//text.setStyle(sf::Text::Regular);
+		//text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487) + "\nPress escape to leave\nEnter to play again");
+		//text.setPosition({ 450, Player::instance->getPosition().y });
+		//window.draw(text);
+
+
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+		//{
+		//	//window.close();
+		//	return status::End;
+		//}
+
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+		//{
+		//	
+		//	return status::PlayAgain;
+		//}
+		////figure out replay
 
 	}
 

@@ -2,6 +2,7 @@
 #include "GameObject.hpp"
 #include "Platforms.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 
@@ -10,7 +11,7 @@ class Player : public GameObject
 public:
 	static Player* instance; 
 
-	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size)
+	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size), jumpSound(jumpBuffer)
 	{
 		this->setPosition(_position);
 		velocity = { 0.0,0.0 };
@@ -20,11 +21,25 @@ public:
 		jumping = false;
 		jumpKeyHeld = 0;
 		jumpsleft = 2;
+
+
+		
+		
+		/*if(instance == nullptr)
+
 		jumpBuffered = false;
 		if(instance == nullptr)
 		{ 
 			instance = this;
-		}
+		}*/
+		Player::instance = this;
+
+		
+		jumpBuffer.loadFromFile("wee.mp3");
+		jumpSound.setBuffer(jumpBuffer);
+		
+
+		
 	}
 
 	void update() override;
@@ -72,6 +87,9 @@ private:
 	int jumpKeyHeld;
 	bool jumpBuffered;
 	int jumpsleft;
+	
+	sf::SoundBuffer jumpBuffer;
+	sf::Sound jumpSound;
 
 	//temporary
 
@@ -106,7 +124,14 @@ void Player::update()
 		velocity.y = jumpStrength;
 		grounded = false;
 		jumping = true;
+
+		if(jumpKeyHeld == 0) jumpsleft--;
+		jumpSound.play();
+		
+		
+
 		jumpsleft--;
+
 	}
 
 	jumpBuffered = jumpPressed; // set to true if the key is still held
