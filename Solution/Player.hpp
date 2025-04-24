@@ -40,6 +40,7 @@ public:
 		jumpSound2.setBuffer(jumpBuffer2);
 		bonkBuffer.loadFromFile("bonk.mp3");
 		bonkSound.setBuffer(bonkBuffer);
+		jumpSound.setVolume(50.0f);
 	}
 
 	void update() override;

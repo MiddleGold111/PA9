@@ -33,7 +33,7 @@ int main()
     //sound.play();
     sf::Music music;
     music.openFromFile("musicbackground.mp3");
-   
+    music.setVolume(20.0f);
    /* sf::SoundBuffer gameBuff;
     gameBuff.loadFromFile("musicbackground.mp3");
     sf::Sound gamesong(gameBuff);*/

@@ -96,8 +96,6 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 	scoreboard.setStyle(sf::Text::Regular);
 	scoreboard.setOutlineThickness(3.0f);
 
-
-
 	
 	buffer.loadFromFile("clang.mp3");
 	sound.setBuffer(buffer);
@@ -229,7 +227,7 @@ status ObjectManager::run(sf::RenderWindow& window)
 	}
 	else
 	{
-		//sound.play();
+		sound.play();
 
 
 
