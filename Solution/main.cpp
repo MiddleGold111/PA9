@@ -70,7 +70,7 @@ int main()
                 if (meep == status::Run)
                 {
                     text.setString("Welcome to the game\nPress enter to start");
-                    text.setPosition({ /*float(500 - ((text.getString().getSize() * 50) / 2))*/ 10 , 450 });
+                    text.setPosition({ /*float(500 - ((text.getString().getSize() * 50) / 2))*/ 50 , window.getView().getCenter().y - 100 });
                     window.draw(text);
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
