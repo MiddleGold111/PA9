@@ -1,3 +1,11 @@
+/*****************************************
+* Programming Assignment 9
+* 04/23/2025
+* Programmers: Jayden Claytor, Blaise Banks
+*
+* Little Lava Lad: a vertical platformer where you run from lava
+* SFML 3.0.0
+*****************************************/
 #pragma once
 #include "GameObject.hpp"
 #include "Platforms.hpp"
@@ -19,20 +27,15 @@ public:
 		jumpStrength = -10.0;
 		grounded = false;
 		jumping = false;
-		jumpKeyHeld = 0;
 		jumpsleft = 2;
 		jumpBuffered = false;
 
 		
 		
 		if(instance == nullptr)
-
-		if(instance == nullptr)
 		{ 
 			instance = this;
 		}
-		//Player::instance = this;
-
 		
 		jumpBuffer.loadFromFile("dirt_jump.mp3");
 		jumpSound.setBuffer(jumpBuffer);
@@ -44,50 +47,14 @@ public:
 	}
 
 	void update() override;
-
-	bool checkCollision()
-	{
-
-		//sf::FloatRect playerBounds = this->getGlobalBounds();
-		bool collided = false;
-		for (Platform* platform : Platform::instances)
-		{
-			CollisionDirection dir = (*platform).collide(*this);
-			if (dir == CollisionDirection::Top)
-			{
-				grounded = true;
-				if(velocity.y > 0) velocity.y = 0;
-				jumping = false;
-				jumpsleft = 2;
-				
-			}
-			if (dir == CollisionDirection::Bottom && velocity.y < 0)
-			{
-				if(velocity.y < -5.0f) bonkSound.play();
-				velocity.y = 0;
-			}
-			if (dir!=CollisionDirection::None)
-			{
-				collided = true;
-			}
-			
-		}
-		if (!collided)
-		{
-			grounded = false;
-		}
-		return collided;
-	}
-
+	bool checkCollision();
 
 private:
 	sf::Vector2f velocity;
 	float gravity;
 	float jumpStrength;
 	bool grounded;
-	//bool grounded2;
 	bool jumping;
-	int jumpKeyHeld;
 	bool jumpBuffered;
 	int jumpsleft;
 	
@@ -98,10 +65,45 @@ private:
 	sf::Sound bonkSound;
 	sf::Sound jumpSound2;
 
-	//temporary	
 };
+//instantiate singleton
 Player* Player::instance = nullptr;
 
+
+bool Player::checkCollision()
+{
+	bool collided = false;
+	//check every platform
+	for (Platform* platform : Platform::instances)
+	{
+		CollisionDirection dir = (*platform).collide(*this);
+		//landed on a platform
+		if (dir == CollisionDirection::Top)
+		{
+			grounded = true;
+			if (velocity.y > 0) velocity.y = 0;
+			jumping = false;
+			jumpsleft = 2;
+
+		}
+		//hit under a platform
+		if (dir == CollisionDirection::Bottom && velocity.y < 0)
+		{
+			if (velocity.y < -5.0f) bonkSound.play();
+			velocity.y = 0;
+		}
+		if (dir != CollisionDirection::None)
+		{
+			collided = true;
+		}
+
+	}
+	if (!collided)
+	{
+		grounded = false;
+	}
+	return collided;
+}
 
 void Player::update()
 {
@@ -128,35 +130,16 @@ void Player::update()
 		
 		jumping = true;
 
-		if(jumpKeyHeld == 0) jumpsleft--;
+		jumpsleft--;
 		if (jumpsleft == 1)
 			jumpSound.play();
 		else jumpSound2.play();
 	
 		grounded = false;
-		//jumpsleft--;
 
 	}
 
 	jumpBuffered = jumpPressed; // set to true if the key is still held
-
-	//bool jumpPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-	//if (jumpPressed && jumpKeyHeld<20 && jumpsleft>0) //fix double jump with &&
-	//{
-	//	velocity.y = jumpStrength;
-	//	grounded = false;
-	//	jumping = true;
-	//	if(jumpKeyHeld == 0) jumpsleft--;
-	//}
-
-	//if (jumpPressed)
-	//{
-	//	jumpKeyHeld++;
-	//}
-	//else
-	//{
-	//	jumpKeyHeld = 0;
-	//}
 
 	if (!grounded)
 	{
@@ -176,27 +159,6 @@ void Player::update()
 	checkCollision();
 
 
-	//if (jumping)
-	//{
-	//	if (this->getPosition().y <= jumpStart - maxJumpHeight)
-	//	{
-	//		velocity.y = 0.0;
-	//		jumping = false;
-	//	}
-	//}
 
-	//if (this->getPosition().y >= groundY) //&& this->getPosition().y <= 0  which is check for ceiling collision, unneccessary...
-	//{
-	//	this->setPosition({ this->getPosition().x, groundY });
-	//	velocity.y = 0;
-	//	grounded = true;
-	//	jumping = false;
-	//}
-	/*if (this->getPosition().y < 0)
-	{
-		this->setPosition({ this->getPosition().x, 0 });
-		velocity.y = 0;
-		
-	}*/
 }
 

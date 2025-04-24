@@ -1,17 +1,24 @@
+/*****************************************
+* Programming Assignment 9
+* 04/23/2025
+* Programmers: Jayden Claytor, Blaise Banks
+* 
+* Little Lava Lad: a vertical platformer where you run from lava
+* SFML 3.0.0
+*****************************************/
 #pragma once
 #include <SFML/Graphics.hpp>
-//#include "Wall.hpp"
 #include "Player.hpp"
 #include "ObjectManager.hpp"
 #include "Lava.hpp"
 #include "Platforms.hpp"
 #include <SFML/Audio.hpp>
-
+#include "test.hpp"
 int main()
 {
-    
+    //Test t;
+    //t.testAll();
     //add a background?
-
     int highscore = 0;
 
 
@@ -25,19 +32,9 @@ int main()
     text.setCharacterSize(50);
     text.setStyle(sf::Text::Regular);
 
-   /* sf::Texture t;
-    t.loadFromFile("goldblock.png");
-    sf::Sprite s(t);*/
-
-    
-    //sound.play();
     sf::Music music;
     music.openFromFile("musicbackground.mp3");
     music.setVolume(20.0f);
-   /* sf::SoundBuffer gameBuff;
-    gameBuff.loadFromFile("musicbackground.mp3");
-    sf::Sound gamesong(gameBuff);*/
-
 
 
     sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
@@ -46,9 +43,6 @@ int main()
     ObjectManager* O = new ObjectManager;
     while (meep != status::End)
     {
-        //sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
-       // window.setFramerateLimit(120);
-       // ObjectManager* O = new ObjectManager;
         music.setLooping(true);
         music.play();
 
@@ -69,12 +63,11 @@ int main()
             
 
             if (menu)
-            { // display the menu
-
+            { // display the 
                 //either open screen or player death
                 if (meep == status::Run)
                 {
-                    text.setString("Welcome to the game\nPress enter to start");
+                    text.setString("Welcome to Little Lava Lad\nPress enter to start");
                     text.setPosition({ /*float(500 - ((text.getString().getSize() * 50) / 2))*/ 50 , window.getView().getCenter().y - 100 });
                     window.draw(text);
 
@@ -86,6 +79,7 @@ int main()
                     }
                 }
 
+                
                 if (meep == status::DeathMenu)
                 {
                     music.pause();
@@ -99,7 +93,7 @@ int main()
                     text.setString("SKILL ISSUE\nScore: " + std::to_string(score) + "\nHigh Score: " + std::to_string(highscore) + "\nPress escape to leave\nEnter to play again");
 
                    
-                    text.setPosition({ 350, window.getView().getCenter().y -200 });/*Player::instance->getPosition().y */
+                    text.setPosition({ 350, window.getView().getCenter().y -200 });
                 
                     window.draw(text);
 
@@ -125,23 +119,14 @@ int main()
                     }
 
 
-
-
-
                 }
                 
             }
             else { // play the game
-                
-                //window.draw(s); //bs background
-
                 meep = O->run(window);              
-               // gamesong.play();
 
                if (meep == status::PlayAgain || meep == status::End)
                 {
-                   /*delete O;
-                    window.close();*/
                    menu = true;
                 }
             }    
@@ -151,9 +136,4 @@ int main()
     }
     delete O;
     return 0;
-   
-    
-   //window.close();
-
-    //return 0;
 }

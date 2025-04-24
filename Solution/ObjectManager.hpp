@@ -1,7 +1,14 @@
+/*****************************************
+* Programming Assignment 9
+* 04/23/2025
+* Programmers: Jayden Claytor, Blaise Banks
+*
+* Little Lava Lad: a vertical platformer where you run from lava
+* SFML 3.0.0
+*****************************************/
 #pragma once
 #include "GameObject.hpp"
 #include "Player.hpp"
-//#include "Wall.hpp"
 #include <vector>
 #include <iostream>
 #include "Lava.hpp"
@@ -11,14 +18,12 @@
 using std::rand;
 
 enum class status {Menu, Run, DeathMenu, End, PlayAgain };
-//enum class status { Run, End};
 
 class ObjectManager
 {
 public:
 	
 	ObjectManager();
-
 
 	~ObjectManager(void)
 	{
@@ -34,15 +39,8 @@ public:
 
 	void reset(void)
 	{
-		
-		
 		Platform::instances.clear();
 		Player::instance = nullptr;
-		/*if (Player::instance) {
-			delete Player::instance;
-		}*/
-		
-		
 	}
 
 	status run(sf::RenderWindow& window);
@@ -75,23 +73,18 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 	if (!lavaTexture.loadFromFile("Lava3.png")) std::cout << "Failed to load Lava3.png\n";
 	if (!goldblockTexture.loadFromFile("goldblock.png")) std::cout << "Failed to load goldblock.png\n";
 
+	//add starting objects
 	objects.push_back(new Player(playerTexture, { 400, 300 }, { 100,100 }));
 	objects.push_back(new Platform(platformTexture, { 0, 500 }, { 1000, 1000 }));
 	objects.push_back(new Lava(lavaTexture, { 0,1000 }, { 1000, 1000 }));
 
 	nextPlatform = rand() % 4 + 9;
-	//add starting objects
 	for (int i = 0; i < 1070; i += 70)
 	{
 		objects.push_back(new Platform(goldblockTexture, { 0,(float)i }, { 70, 70 }));
 		objects.push_back(new Platform(goldblockTexture, { 930,(float)i }, { 70, 70 }));
-		/*if(nextPlatform == 0)
-		{
-			objects.push_back(new Platform(platformTexture, { 70, (float)i }, {50, 150}));
-			nextPlatform = rand() % 4 + 9;
-		}
-		nextPlatform--;*/
 	}
+
 	endScreen = false;
 	scoreboard.setStyle(sf::Text::Regular);
 	scoreboard.setOutlineThickness(3.0f);
@@ -99,8 +92,6 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 	
 	buffer.loadFromFile("clang.mp3");
 	sound.setBuffer(buffer);
-	
-	
 }
 
 status ObjectManager::run(sf::RenderWindow& window)
@@ -109,7 +100,7 @@ status ObjectManager::run(sf::RenderWindow& window)
 
 	if (!endScreen)
 	{
-
+		//update view position
 		sf::View view = window.getView();
 		view.setCenter({ 500, Player::instance->getPosition().y });
 		window.setView(view);
@@ -119,11 +110,10 @@ status ObjectManager::run(sf::RenderWindow& window)
 		scoreboard.setString(std::to_string(-(int)Player::instance->getPosition().y +400));
 		window.draw(scoreboard);
 
-		//for (GameObject* current : objects)
+
 		for (size_t i = 0; i < objects.size();)
 		{
 			GameObject* current = objects[i];
-
 
 			current->update();
 			window.draw(*current);
@@ -135,14 +125,14 @@ status ObjectManager::run(sf::RenderWindow& window)
 				objects.erase(objects.begin() + i);
 
 			}
-			else
+			else 
 			{
 				i++;
 			}
 		}
 
 		//create new objects based on top platform
-		//generate new platforms (and walls)
+		//generate new platforms (and "walls")
 		if (Platform::top > Player::instance->getPosition().y - 700)
 		{
 			//walls
@@ -193,10 +183,13 @@ status ObjectManager::run(sf::RenderWindow& window)
 			}
 			nextPlatform--;
 		}
+
+		//die
 		if (Player::instance->getPosition().y > Lava::instance->getPosition().y)
 		{
 			endScreen = true;
 		}
+
 		//update score color and lavaspeed
 		if (Player::instance->getPosition().y < -40000 && Lava::instance->getSpeed()>-4.0f)
 		{
@@ -228,31 +221,7 @@ status ObjectManager::run(sf::RenderWindow& window)
 	else
 	{
 		sound.play();
-
-
-
 		return status:: DeathMenu;
-		//
-		//sf::Text text(font);
-		//text.setCharacterSize(50);
-		//text.setStyle(sf::Text::Regular);
-		//text.setString("SKILL ISSUE\n score: " + std::to_string(-(int)Player::instance->getPosition().y + 487) + "\nPress escape to leave\nEnter to play again");
-		//text.setPosition({ 450, Player::instance->getPosition().y });
-		//window.draw(text);
-
-
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-		//{
-		//	//window.close();
-		//	return status::End;
-		//}
-
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
-		//{
-		//	
-		//	return status::PlayAgain;
-		//}
-		////figure out replay
 
 	}
 
