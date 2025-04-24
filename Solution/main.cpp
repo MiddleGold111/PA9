@@ -31,8 +31,13 @@ int main()
 
     
     //sound.play();
+    sf::Music music;
+    music.openFromFile("musicbackground.mp3");
 
    
+   /* sf::SoundBuffer gameBuff;
+    gameBuff.loadFromFile("musicbackground.mp3");
+    sf::Sound gamesong(gameBuff);*/
 
 
 
@@ -48,9 +53,12 @@ int main()
         //sf::RenderWindow window(sf::VideoMode({ 1000, 1000 }), "THE GAME");
        // window.setFramerateLimit(120);
        // ObjectManager* O = new ObjectManager;
+        music.setLooping(true);
+        music.play();
 
         while (window.isOpen())
         {
+            
             if (meep == status::DeathMenu) menu = true;
             while (const std::optional event = window.pollEvent())
             {
@@ -62,6 +70,7 @@ int main()
             }
 
             window.clear();
+            
 
             if (menu)
             { // display the menu
@@ -83,6 +92,7 @@ int main()
 
                 if (meep == status::DeathMenu)
                 {
+                    music.pause();
 
                     int score = -(int)Player::instance->getPosition().y + 487;
                     if (score > highscore)
@@ -114,6 +124,7 @@ int main()
                         meep = status::Run;
                    
                         menu = true;
+                        music.play();
                         
                     }
 
@@ -125,10 +136,11 @@ int main()
                 
             }
             else { // play the game
-
+                
                 //window.draw(s); //bs background
 
-                meep = O->run(window);                
+                meep = O->run(window);              
+               // gamesong.play();
 
                if (meep == status::PlayAgain || meep == status::End)
                 {

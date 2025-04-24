@@ -229,7 +229,7 @@ status ObjectManager::run(sf::RenderWindow& window)
 	}
 	else
 	{
-		sound.play();
+		//sound.play();
 
 
 
