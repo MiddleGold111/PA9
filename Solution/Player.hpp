@@ -11,7 +11,7 @@ class Player : public GameObject
 public:
 	static Player* instance; 
 
-	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size), jumpSound(jumpBuffer)
+	Player(const sf::Texture& _texture, const sf::Vector2f& _position, const sf::Vector2f& size) : GameObject(_texture, size), jumpSound(jumpBuffer), bonkSound(bonkBuffer), jumpSound2(jumpBuffer2)
 	{
 		this->setPosition(_position);
 		velocity = { 0.0,0.0 };
@@ -21,25 +21,25 @@ public:
 		jumping = false;
 		jumpKeyHeld = 0;
 		jumpsleft = 2;
-
-
-		
-		
-		/*if(instance == nullptr)
-
 		jumpBuffered = false;
+
+		
+		
+		if(instance == nullptr)
+
 		if(instance == nullptr)
 		{ 
 			instance = this;
-		}*/
-		Player::instance = this;
+		}
+		//Player::instance = this;
 
 		
-		jumpBuffer.loadFromFile("wee.mp3");
+		jumpBuffer.loadFromFile("dirt_jump.mp3");
 		jumpSound.setBuffer(jumpBuffer);
-		
-
-		
+		jumpBuffer2.loadFromFile("swish.mp3");
+		jumpSound2.setBuffer(jumpBuffer2);
+		bonkBuffer.loadFromFile("bonk.mp3");
+		bonkSound.setBuffer(bonkBuffer);
 	}
 
 	void update() override;
@@ -58,9 +58,11 @@ public:
 				if(velocity.y > 0) velocity.y = 0;
 				jumping = false;
 				jumpsleft = 2;
+				
 			}
 			if (dir == CollisionDirection::Bottom && velocity.y < 0)
 			{
+				if(velocity.y < -5.0f) bonkSound.play();
 				velocity.y = 0;
 			}
 			if (dir!=CollisionDirection::None)
@@ -89,13 +91,13 @@ private:
 	int jumpsleft;
 	
 	sf::SoundBuffer jumpBuffer;
+	sf::SoundBuffer jumpBuffer2;
+	sf::SoundBuffer bonkBuffer;
 	sf::Sound jumpSound;
+	sf::Sound bonkSound;
+	sf::Sound jumpSound2;
 
-	//temporary
-
-	//bool moveleft;
-	//bool moveright;
-	
+	//temporary	
 };
 Player* Player::instance = nullptr;
 
@@ -122,15 +124,16 @@ void Player::update()
 	if (jumpPressed && !jumpBuffered && jumpsleft > 0)
 	{
 		velocity.y = jumpStrength;
-		grounded = false;
+		
 		jumping = true;
 
 		if(jumpKeyHeld == 0) jumpsleft--;
-		jumpSound.play();
-		
-		
-
-		jumpsleft--;
+		if (jumpsleft == 1)
+			jumpSound.play();
+		else jumpSound2.play();
+	
+		grounded = false;
+		//jumpsleft--;
 
 	}
 

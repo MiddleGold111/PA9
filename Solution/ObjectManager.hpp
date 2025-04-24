@@ -99,7 +99,7 @@ ObjectManager::ObjectManager() : font("theFont.ttf"), scoreboard(font), sound(bu
 
 
 	
-	buffer.loadFromFile("ded.mp3");
+	buffer.loadFromFile("clang.mp3");
 	sound.setBuffer(buffer);
 	
 	
